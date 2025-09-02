@@ -1,0 +1,33 @@
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+# Lista de tarefas (fake database)
+tasks = [
+    {"id": 1, "title": "Estudar Python", "done": False},
+    {"id": 2, "title": "Construir uma API Flask", "done": False}
+]
+
+@app.route('/')
+def home():
+    return jsonify({"message": "Bem-vindo à API de Tarefas!"})
+
+@app.route('/tasks', methods=['GET'])
+def get_tasks():
+    return jsonify(tasks)
+
+@app.route('/tasks', methods=['POST'])
+def create_task():
+    data = request.get_json()
+    new_task = {
+        "id": len(tasks) + 1,
+        "title": data["title"],
+        "done": False
+    }
+    tasks.append(new_task)
+    return jsonify(new_task), 201
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
